@@ -2,7 +2,14 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import Pokedex from './components/Pokedex';
 import PokeInfo from './components/PokeInfo';
+import DatabaseHelper from './DatabaseHelper';
+import LoginInterface from './login/LoginInterface';
 import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 class App extends Component {
   constructor() {
@@ -13,21 +20,43 @@ class App extends Component {
       pokemon: { results: [], next: "" },
       pokeDetail: {},
       show: false,
-      loading: false
+      loading: false,
+      currentUser: undefined,
+      currentPage: 'login',
     }
   }
 
-  getDatabaseData() {
-    fetch("http://localhost:9000/connection")
-      .then(data => data.text())
-      .then(data => this.setState({ data }));
+  handleChangePage(newPage) {
+    this.setState({currentPage: newPage});
   }
+
+  setUser(userData) {
+    this.setState({currentUser: userData});
+  }
+
+  openSnackBar(message) {
+    this.setState({
+    	snackOpen: true,
+    	snackMessage: message
+    });
+  };
+
+  handleSnackClose(event, reason){
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    this.setState({
+    	snackOpen: false,
+    	snackMessage: ''
+    });
+  };
 
   getPokemonData(apiUrl) {
     if (apiUrl === undefined) {
       const rand = 0 + Math.random() * (600 - 0);
 
-      apiUrl = "https://pokeapi.co/api/v2/pokemon/?limit=100&offset="+rand;
+      apiUrl = "https://pokeapi.co/api/v2/pokemon/?limit=50&offset="+rand;
     }
 
     $.ajax({
@@ -41,9 +70,6 @@ class App extends Component {
           this.setState({ pokeDetail: data })
         }
       }.bind(this),
-      error: (xhr, status, err) => {
-        console.log("We got an error here: ", xhr);
-      }
     })
   }
 
@@ -61,14 +87,61 @@ class App extends Component {
     this.getPokemonData();
   }
 
+  getContent() {
+  	const {currentPage} = this.state;
+
+  	switch (currentPage) {
+  		case 'login': 
+  			return <LoginInterface
+  				handleChangePage={this.handleChangePage.bind(this)}
+  				setUser={this.setUser.bind(this)}
+  				openSnackBar={this.openSnackBar.bind(this)}
+				/>
+  		case 'database':
+  			return <DatabaseHelper {...this.props}/>
+  		default: 
+		    return (
+		      <Grid item xs={12}>
+		        <Grid container justify="center" spacing={2}>
+			        <PokeInfo pokeDetail={this.state.pokeDetail} show={this.state.show} hideDetail={this.detailHider.bind(this)} />
+			        <Pokedex pokemon={this.state.pokemon.results} showDetail={this.detailGetter.bind(this)}/>
+		        </Grid>
+		      </Grid>
+		    );
+  	}
+	}
+
   render() {
     return (
-      <Grid item xs={12}>
-        <Grid container justify="center" spacing={2}>
-        <PokeInfo pokeDetail={this.state.pokeDetail} show={this.state.show} hideDetail={this.detailHider.bind(this)} />
-        <Pokedex pokemon={this.state.pokemon.results} showDetail={this.detailGetter.bind(this)}/>
-        </Grid>
-      </Grid>
+      <React.Fragment>
+        <CssBaseline />
+        <Container maxWidth="md" style={{height: "100%", display: "flex", justifyContent: "center", alignContent: "center"}}>
+		      <Snackbar
+		        anchorOrigin={{
+		          vertical: 'bottom',
+		          horizontal: 'left',
+		        }}
+		        open={this.state.snackOpen}
+		        autoHideDuration={3000}
+		        onClose={this.handleSnackClose.bind(this)}
+		        ContentProps={{
+		          'aria-describedby': 'message-id',
+		        }}
+		        message={<span id="message-id">{this.state.snackMessage}</span>}
+		        action={[
+		          <IconButton
+		            key="close"
+		            aria-label="close"
+		            color="inherit"
+		       			onClick={this.handleSnackClose.bind(this)}
+		          >
+		            <CloseIcon />
+		          </IconButton>,
+		        ]}
+		      />
+          {this.getContent()}
+        </Container>
+      </React.Fragment>
     );
   }
 }

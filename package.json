@@ -1,0 +1,23 @@
+{
+  "name": "Dexit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "concurrently \"cd backend && node server.js\" \"cd client && npm start\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zhaetar/Dexit.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Zhaetar/Dexit/issues"
+  },
+  "homepage": "https://github.com/Zhaetar/Dexit#readme",
+  "dependencies": {
+    "concurrently": "^5.0.0"
+  }
+}

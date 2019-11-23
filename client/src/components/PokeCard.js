@@ -47,13 +47,17 @@ class PokeCard extends Component {
   }
 
   render() {
+    if (this.state.imgUrl === "") {
+      return null;
+    }
+
     return (
       <Card style={{ margin: "3px" }}>
         <CardActionArea onClick={this.detailClick.bind(this, this.props.pokemon.url)}>
           <CardMedia
             component="img"
             height={'140'}
-            image={this.state.imgUrl}
+            src={this.state.imgUrl}
             title={capitalizeFirst(this.state.name)}
           />
           <CardContent>
