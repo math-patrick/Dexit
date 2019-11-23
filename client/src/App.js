@@ -7,21 +7,27 @@ import Grid from '@material-ui/core/Grid';
 class App extends Component {
   constructor() {
     super();
+
     this.state = {
-      pokemon: { count: 0, previous: "", results: [], next: "" },
+      data: {},
+      pokemon: { results: [], next: "" },
       pokeDetail: {},
       show: false,
-      offset: 0,
-      count: 0,
       loading: false
     }
+  }
+
+  getDatabaseData() {
+    fetch("http://localhost:9000/connection")
+      .then(data => data.text())
+      .then(data => this.setState({ data }));
   }
 
   getPokemonData(apiUrl) {
     if (apiUrl === undefined) {
       const rand = 0 + Math.random() * (600 - 0);
 
-      apiUrl = "https://pokeapi.co/api/v2/pokemon/?limit=25&offset="+rand;
+      apiUrl = "https://pokeapi.co/api/v2/pokemon/?limit=100&offset="+rand;
     }
 
     $.ajax({
