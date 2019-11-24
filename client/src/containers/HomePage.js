@@ -3,9 +3,11 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
-import PokeCard from './../components/PokeCard';
+import PokemonAvatar from './../components/PokemonAvatar';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
 
-class PokedexPage extends Component {
+class HomePage extends Component {
   constructor(props) {
     super(props);
 
@@ -14,18 +16,10 @@ class PokedexPage extends Component {
     }
   }
 
-  emptyFunc() {
-
-  }
-
   getUserTeams() {
     let userTeams = this.state.user.teams;
-    userTeams = [
-      {name: "Elemental", pokemon: [1, 2, 3, 4, 5, 6]},
-      {name: "Elemental 2", pokemon: [54, 232, 343, 412, 512, 633]}
-    ];
 
-    if (userTeams) {
+    if (userTeams && userTeams.length > 0) {
       return (
         <Grid item xs={12}>
           <Grid container justify="center" spacing={2}>
@@ -46,10 +40,10 @@ class PokedexPage extends Component {
 
   getUserTeam(userTeam) {
     return (
-      <Grid item xs={12} justify="center" spacing={2}>
+      <Grid item xs={12} align="center" key={userTeam.name}>
         <Paper style={{width: "100%", padding: "20px"}}>
-          <Typography>
-            <Box m={1} fontSize={30} fontWeight="fontWeightBold">
+          <Typography component="div">
+            <Box fontSize={30} fontWeight="fontWeightBold">
               {userTeam.name}
             </Box>
           </Typography>
@@ -62,31 +56,39 @@ class PokedexPage extends Component {
   }
 
   getTeamPokemon(pokemon) {
-    return pokemon.map((pokemon, index) => {
+    return pokemon.map((pokemon) => {
       let pokemonURL = 'https://pokeapi.co/api/v2/pokemon/'+pokemon;
 
       return (
-        <Grid item xs={4}>
-          <PokeCard showDetail={this.emptyFunc.bind(this)} key={index} pokemon={pokemonURL} />
+        <Grid item key={pokemon} xs={2}>
+          <PokemonAvatar
+            pokemon={pokemonURL} />
         </Grid>
       );
     });
   }
 
   render() {
+    let {handleChangePage} = this.props;
+
     return (
-      <Grid container justify="center" spacing={2}>
-        <Grid item xs={12} alignSelf="flex-start">
-          <Typography>
-            <Box m={1} fontSize={50} fontWeight="fontWeightBold">
-                Your teams
-            </Box>
-          </Typography>
+      <div>
+        <Grid container justify="center" spacing={2}>
+          <Grid item xs={12}>
+            <Typography component="div">
+              <Box fontSize={50} fontWeight="fontWeightBold">
+                  Your teams
+              </Box>
+            </Typography>
+          </Grid>
+          {this.getUserTeams()}
         </Grid>
-        {this.getUserTeams()}
-      </Grid>
+        <Fab onClick={handleChangePage.bind(this, 'team')} variant="extended" color="primary" aria-label="add" style={{position: "fixed", right: "10px", bottom: "10px"}}>
+          <AddIcon />
+        </Fab>
+      </div>
     );
   }
 }
 
-export default PokedexPage;
+export default HomePage;

@@ -7,63 +7,61 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import AbilityList from './AbilityList';
 import MoveList from './MoveList';
 import Summary from './Summary';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import {capitalizeFirst} from './../Functions.js';
 
 class PokeInfo extends Component {
-  hideClick() {
-    this.props.hideDetail();
-  }
-
   getPokemonInfo() {
-    if (this.props.pokeDetail.name === undefined) {
-      return (
-        <div itemID="detail-loader">
-          <p>Fetching Data...</p>
-          <div className="spinner-small"></div>
-        </div>
-      );
-    }
-    
+    let {pokemon} = this.props;
+
     return (
       <div>
         <Summary
-          url={this.props.pokeDetail.species.url}
-          sprite={this.props.pokeDetail.sprites.front_default}
+          url={pokemon.species.url}
+          sprite={pokemon.sprites.front_default}
         />
         <AbilityList
-          abilities={this.props.pokeDetail.abilities}
+          abilities={pokemon.abilities}
           />
         <MoveList
-          moveList={this.props.pokeDetail.moves}
+          moveList={pokemon.moves}
           />
       </div>
     );
   }
 
+  getActions() {
+    let {hideDetail, editMode} = this.props;
+
+    return (
+      <React.Fragment>
+        {editMode && <Button onClick={hideDetail} color="primary">
+          Pick
+        </Button>}
+        <Button onClick={hideDetail} color="secondary">
+          Close
+        </Button>
+      </React.Fragment>
+    );
+  }
+
   render() {
-    let pokemonName;
-    if (this.props.pokeDetail.name !== undefined) {
-      pokemonName = capitalizeFirst(this.props.pokeDetail.name);
+    let {pokemon, show} = this.props;
+
+    if (!pokemon) {
+      return <CircularProgress />;
     }
 
     return (
-      <Dialog
-        open={this.props.show}
-        aria-labelledby="draggable-dialog-title"
-      >
+      <Dialog open={show}>
         <DialogTitle>
-          {pokemonName}
+          {capitalizeFirst(pokemon.name)}
         </DialogTitle>
         <DialogContent>
           {this.getPokemonInfo()}
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.hideClick.bind(this)} color="primary">
-            Pick
-          </Button>
-          <Button onClick={this.hideClick.bind(this)} color="secondary">
-            Close
-          </Button>
+          {this.getActions()}
         </DialogActions>
       </Dialog>
     );

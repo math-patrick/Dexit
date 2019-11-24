@@ -1,80 +1,85 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
+import PokeInfo from './../components/PokeInfo';
 import Typography from '@material-ui/core/Typography';
 import {capitalizeFirst} from './../Functions.js';
 import $ from 'jquery';
 
-class PokeCard extends Component {
+class PokeCard extends PureComponent {
+  constructor(props) {
+    super(props);
 
-  constructor() {
-    super();
     this.state = {
-      imgUrl: "",
-      name: "",
-      loadingDiv: "loadingImg"
+      detailOpen: false,
+      pokemon: undefined,
     }
   }
 
-  getImg() {
-    this.setState({ loading: "loadingImg" });
+  getPokemonData() {
     $.ajax({
       url: this.props.pokemon,
       dataType: 'json',
       cache: true,
       success: function(data) {
-        this.setState({ imgUrl: data.sprites.front_default });
-        this.setState({ loading: "loaded" });
+        this.setState({ pokemon: data });
         this.setState({ name: data.name });
       }.bind(this),
-
-      error: function(xhr, status, err) {
-        console.log(err);
-      }
     })
   }
 
-  detailClick(pokeUrl) {
-    this.props.showDetail(pokeUrl);
+  componentDidMount() {
+    this.getPokemonData();
   }
 
-  componentDidMount() {
-    this.getImg();
+  toggleDetail(toggle) {
+    this.setState({detailOpen: toggle});
   }
 
   render() {
-    if (this.state.imgUrl === "") {
+    let {pokemon, detailOpen} = this.state;
+    let {selected, selectPokemon} = this.props
+
+    if (!pokemon) {
       return null;
     }
 
     return (
-      <Card style={{ margin: "3px" }}>
-        <CardActionArea onClick={this.detailClick.bind(this, this.props.pokemon)}>
-          <CardMedia
-            component="img"
-            height={'140'}
-            src={this.state.imgUrl}
-            title={capitalizeFirst(this.state.name)}
+      <React.Fragment>
+        <PokeInfo
+          pokemon={pokemon}
+          show={detailOpen}
+          hideDetail={this.toggleDetail.bind(this, false)}
+          editMode
           />
-          <CardContent>
-            <Typography component="h5" variant="h5">
-              {capitalizeFirst(this.state.name)}
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-        <CardActions>
-          <Button size="small" color="primary">
-            Pick
-        </Button>
-          <Button size="small" color="default" onClick={this.detailClick.bind(this, this.props.pokemon)}>
-            Summary
-        </Button>
-        </CardActions>
-      </Card>
+        <Card style={selected ? {backgroundColor: "#ccff90"} : {}}>
+          <CardActionArea onClick={selectPokemon.bind(this, pokemon.name)}>
+            <CardMedia
+              component="img"
+              height={'140'}
+              src={pokemon.sprites.front_default}
+              title={capitalizeFirst(pokemon.name)}
+            />
+            <CardContent>
+              <Typography component="h5" variant="h5">
+                {capitalizeFirst(pokemon.name)}
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+          <CardActions>
+            <Button size="small" color="primary" onClick={selectPokemon.bind(this, pokemon.name)}>
+              {!selected ? "Pick" : "Undo pick"}
+            </Button>
+            <Button size="small" color="default" onClick={this.toggleDetail.bind(this, true)}>
+              Summary
+            </Button>
+          </CardActions>
+        </Card>
+      </React.Fragment>
     );
   }
 }

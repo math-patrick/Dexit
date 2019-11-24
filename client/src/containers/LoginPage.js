@@ -37,7 +37,7 @@ class LoginPage extends Component {
 
         if (loggedUser !== undefined && loggedUser[0] !== undefined) {
           this.props.openSnackBar("Welcome "+loggedUser[0].login+"!");
-          this.props.setUser(loggedUser);
+          this.props.setUser(loggedUser[0]);
           this.props.handleChangePage('home');
         } else {
           this.props.openSnackBar("The username or password is incorrect!");
@@ -88,7 +88,7 @@ class LoginPage extends Component {
         align="center"
         justify="space-around"
         spacing={1} >
-        <Grid item xs={12} alignSelf="flex-start">
+        <Grid item xs={12}>
             <Button
               style={buttonStyle}
               onClick={this.handleLogin.bind(this)}
@@ -98,7 +98,7 @@ class LoginPage extends Component {
               Login
             </Button>
         </Grid>
-        <Grid item xs={12} alignSelf="flex-start">
+        <Grid item xs={12}>
             <Button
               style={buttonStyle}
               onClick={this.handleRegister.bind(this)}
@@ -116,16 +116,16 @@ class LoginPage extends Component {
     const {login, password} = this.state;
 
     return (
-      <Paper  id='loginContainer' style={{width: "100%", display: "flex", justifyContent: "center", alignItems: "center", padding: "20px"}}>
-        <div>
+      <Paper id='loginContainer' style={{width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
+        <div style={{padding: "20px"}}>
           <Grid
             container
             align="center"
             justify="space-around"
             spacing={3} >
-            <Grid item xs={12} alignSelf="flex-start">
-              <Typography>
-                <Box m={1} fontSize={50} fontWeight="fontWeightBold">
+            <Grid item xs={12}>
+              <Typography component="div">
+                <Box fontSize={50} fontWeight="fontWeightBold">
                     Dexit
                 </Box>
               </Typography>

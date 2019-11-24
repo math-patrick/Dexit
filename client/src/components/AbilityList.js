@@ -12,10 +12,7 @@ class AbilityList extends Component {
 
     return (
       <ExpansionPanel>
-        <ExpansionPanelSummary
-          aria-controls="panel1a-content"
-          id="ability"
-        >
+        <ExpansionPanelSummary>
           <Typography variant="h6" component="h6">
             Abilities
           </Typography>
