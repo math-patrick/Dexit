@@ -23,7 +23,7 @@ class PokeCard extends Component {
   getImg() {
     this.setState({ loading: "loadingImg" });
     $.ajax({
-      url: this.props.pokemon.url,
+      url: this.props.pokemon,
       dataType: 'json',
       cache: true,
       success: function(data) {
@@ -53,7 +53,7 @@ class PokeCard extends Component {
 
     return (
       <Card style={{ margin: "3px" }}>
-        <CardActionArea onClick={this.detailClick.bind(this, this.props.pokemon.url)}>
+        <CardActionArea onClick={this.detailClick.bind(this, this.props.pokemon)}>
           <CardMedia
             component="img"
             height={'140'}
@@ -70,7 +70,7 @@ class PokeCard extends Component {
           <Button size="small" color="primary">
             Pick
         </Button>
-          <Button size="small" color="default" onClick={this.detailClick.bind(this, this.props.pokemon.url)}>
+          <Button size="small" color="default" onClick={this.detailClick.bind(this, this.props.pokemon)}>
             Summary
         </Button>
         </CardActions>

@@ -13,7 +13,7 @@ class Pokedex extends Component {
     if (this.props.pokemon) {
       pokemonList = this.props.pokemon.map(pokemon => {
         return (
-          <PokeCard showDetail={this.getDetail.bind(this)} key={pokemon.name} pokemon={pokemon} />
+          <PokeCard showDetail={this.getDetail.bind(this)} key={pokemon.name} pokemon={pokemon.url} />
         );
       });
     }

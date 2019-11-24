@@ -37,7 +37,9 @@ class Move extends Component {
     }
 
     return (
-      <Card style={{border: "solid 3px "+typeColors[this.state.move.type.name]}}>
+      <Card style={{
+        border: "solid 2px " + typeColors[this.state.move.type.name] 
+      }}>
         <CardContent>
           <Typography style={{color: typeColors[this.state.move.type.name]}} gutterBottom>
             <b>{getEnglishText(this.state.move.names, 'name')}</b>

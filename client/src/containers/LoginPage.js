@@ -11,18 +11,15 @@ const buttonStyle = {
   width: "150px",
 }
 
-class LoginInterface extends Component {
-  constructor() {
-    super();
+class LoginPage extends Component {
+  constructor(props) {
+    super(props);
 
     this.state = {
       state: true,
       login: undefined,
       password: undefined,
     }
-  }
-
-  getUser() {
   }
 
   handleLogin() {
@@ -41,7 +38,7 @@ class LoginInterface extends Component {
         if (loggedUser !== undefined && loggedUser[0] !== undefined) {
           this.props.openSnackBar("Welcome "+loggedUser[0].login+"!");
           this.props.setUser(loggedUser);
-          this.props.handleChangePage('dasd');
+          this.props.handleChangePage('home');
         } else {
           this.props.openSnackBar("The username or password is incorrect!");
         }
@@ -52,11 +49,25 @@ class LoginInterface extends Component {
     const {login, password} = this.state;
     
     axios
-      .post('http://localhost:3001/api/putData', {
+      .get('http://localhost:3001/api/getData', {
         login: login,
-        password: password,
       })
-      .then((data) => this.props.openSnackBar("User "+login+" registered with sucess!"));
+      .then((response) => {
+        let loggedUser = response.data.data.filter(account => {
+          return account.login === login
+        });
+
+        if (loggedUser !== undefined && loggedUser[0] !== undefined) {
+          this.props.openSnackBar("The username "+loggedUser[0].login+" already exists!");
+        } else {
+          axios
+            .post('http://localhost:3001/api/putData', {
+              login: login,
+              password: password,
+            })
+            .then((data) => this.props.openSnackBar("User "+login+" registered with sucess!"));
+        }
+      });
   }
 
   changeInput(event) {
@@ -97,16 +108,6 @@ class LoginInterface extends Component {
               Register
             </Button>
         </Grid>
-        <Grid item xs={12} alignSelf="flex-start">
-            <Button
-              style={buttonStyle}
-              onClick={this.props.handleChangePage.bind('database')}
-              variant="contained"
-              color="default"
-              size="large">
-              Verificar dados
-            </Button>
-        </Grid>
       </Grid>
     );
   }
@@ -115,7 +116,7 @@ class LoginInterface extends Component {
     const {login, password} = this.state;
 
     return (
-      <Paper  id='loginContainer' style={{display: "flex", justifyContent: "center", alignItems: "center", padding: "20px"}}>
+      <Paper  id='loginContainer' style={{width: "100%", display: "flex", justifyContent: "center", alignItems: "center", padding: "20px"}}>
         <div>
           <Grid
             container
@@ -130,10 +131,10 @@ class LoginInterface extends Component {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <TextField id="login" value={login} label="Login" onChange={this.changeInput.bind(this)}/>
+              <TextField id="login" style={{width: "300px"}}value={login} label="Login" onChange={this.changeInput.bind(this)}/>
             </Grid>
             <Grid item xs={12}>
-              <TextField id="password" value={password} label="Password" type="password" onChange={this.changeInput.bind(this)}/>
+              <TextField id="password" style={{width: "300px"}}value={password} label="Password" type="password" onChange={this.changeInput.bind(this)}/>
             </Grid>
             <Grid item xs={12}>
               {this.getButtons()}
@@ -145,4 +146,4 @@ class LoginInterface extends Component {
   }
 }
 
-export default LoginInterface;
+export default LoginPage;

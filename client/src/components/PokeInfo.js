@@ -60,10 +60,10 @@ class PokeInfo extends Component {
         <DialogActions>
           <Button onClick={this.hideClick.bind(this)} color="primary">
             Pick
-        </Button>
+          </Button>
           <Button onClick={this.hideClick.bind(this)} color="secondary">
             Close
-        </Button>
+          </Button>
         </DialogActions>
       </Dialog>
     );

@@ -37,7 +37,7 @@ class MoveList extends Component {
             <Grid container justify="center" spacing={2}>
               {moveList.map(move => {
                 return (
-                  <Grid key={move.id} item xs={6}>
+                  <Grid key={move.id} item xs={12}>
                     <Move url={move.move.url} />
                   </Grid>
                 );
