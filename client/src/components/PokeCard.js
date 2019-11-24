@@ -7,6 +7,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import PokeInfo from './../components/PokeInfo';
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import {capitalizeFirst} from './../Functions.js';
 import $ from 'jquery';
 
@@ -45,7 +46,7 @@ class PokeCard extends PureComponent {
     let {selected, selectPokemon} = this.props
 
     if (!pokemon) {
-      return null;
+      return <CircularProgress/>;
     }
 
     return (

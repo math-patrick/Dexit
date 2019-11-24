@@ -31,7 +31,7 @@ class TeamPage extends Component {
     const rand = 0 + Math.random() * (600 - 0);
 
     $.ajax({
-      url: "https://pokeapi.co/api/v2/pokemon/?limit=15&offset="+rand,
+      url: "https://pokeapi.co/api/v2/pokemon/?limit=24&offset="+rand,
       dataType: "json",
       cache: true,
       success: function(data) {
@@ -60,6 +60,21 @@ class TeamPage extends Component {
     const {selectedPokemon, teamName} = this.state;
     const {user, openSnackBar, handleChangePage, setUser} = this.props;
     
+    if (selectedPokemon.length < 1) {
+      openSnackBar("You need to select at least one pokémon!");
+      return false;
+    }
+
+    if (selectedPokemon.length > 6) {
+      openSnackBar("Your team can't have mora than six pokémon!");
+      return false;
+    }
+
+    if (!teamName) {
+      openSnackBar("You team needs a name!");
+      return false;
+    }
+
     axios
       .get('http://localhost:3001/api/getData')
       .then((response) => {
@@ -69,6 +84,7 @@ class TeamPage extends Component {
         let teams = loggedUser.hasOwnProperty('teams') ? loggedUser.teams : [];
 
         teams.push({
+          id: teams.length,
           name: teamName,
           pokemon: selectedPokemon
         })
@@ -127,7 +143,7 @@ class TeamPage extends Component {
         <PokeCard
           pokemon={pokemon.url}
           selected={selectedPokemon.includes(pokemon.name)}
-          selectedPokemon={selectedPokemon}
+          canSelect={selectedPokemon > 6}
           selectPokemon={this.selectPokemon.bind(this)}
         />
       </Grid>
@@ -157,13 +173,6 @@ class TeamPage extends Component {
     return (
       <div>
         <Grid container justify="center" spacing={5}>
-          <Grid item xs={12}>
-            <Typography component="div">
-              <Box fontSize={50} fontWeight="fontWeightBold">
-                  New team
-              </Box>
-            </Typography>
-          </Grid>
           <Grid item xs={12}>
             {this.getTeamNamePicker()}
           </Grid>

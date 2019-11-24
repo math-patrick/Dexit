@@ -5,6 +5,17 @@ import TeamPage from './containers/TeamPage';
 import SnackbarPoke from './components/SnackbarPoke';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Button from '@material-ui/core/Button';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+
+const PageTitles = {
+	'login': 'Login',
+	'home': 'Your teams',
+	'team': 'Team builder',
+}
 
 class App extends Component {
   constructor() {
@@ -49,7 +60,9 @@ class App extends Component {
 		    return (
 	    		<HomePage
 		    		user={this.state.currentUser}
+	  				openSnackBar={this.openSnackBar.bind(this)}
 	  				handleChangePage={this.handleChangePage.bind(this)}
+	  				setUser={this.setUser.bind(this)}
 	    		/>
     		);
   		case 'team': 
@@ -66,15 +79,32 @@ class App extends Component {
   	}
 	}
 
+	getAppBar() {
+		return (
+	    <AppBar position="static">
+	      <Toolbar style={{width: "100%", display: "flex", justifyContent: "space-between"}}>
+		        <Grid container spacing={2}>
+		        	<Grid item xs={11}>
+				        <Typography variant="h6">
+				          {PageTitles[this.state.currentPage]}
+				        </Typography>
+				      </Grid>
+			      </Grid>
+	      </Toolbar>
+	    </AppBar>
+    );
+	}
+
   render() {
     return (
-      <React.Fragment>
+      <div style={{height: "100%", display: "flex", flexDirection: "column"}}>
         <CssBaseline />
-        <Container maxWidth="md" style={{height: "100%", display: "flex", justifyContent: "center", alignContent: "center"}}>
+      	{this.getAppBar()}
+        <Container maxWidth="md" style={{flexGrow: 1, display: "flex", justifyContent: "center", alignContent: "center"}}>
 		      <SnackbarPoke message={this.state.snackMessage} open={this.state.snackOpen}/>
 	        {this.getContent()}
         </Container>
-      </React.Fragment>
+      </div>
     );
   }
 }
