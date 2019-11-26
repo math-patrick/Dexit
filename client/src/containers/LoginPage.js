@@ -25,6 +25,11 @@ class LoginPage extends Component {
   handleLogin() {
     const {login, password} = this.state;
 
+    if (!login || !password) {
+      this.props.openSnackBar("Please fill all fields!");
+      return false;
+    }
+
     axios
       .get('http://localhost:3001/api/getData', {
         login: login,
@@ -48,6 +53,11 @@ class LoginPage extends Component {
   handleRegister() {
     const {login, password} = this.state;
     
+    if (!login || !password) {
+      this.props.openSnackBar("Please fill all fields!");
+      return false;
+    }
+
     axios
       .get('http://localhost:3001/api/getData', {
         login: login,
@@ -131,10 +141,10 @@ class LoginPage extends Component {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <TextField id="login" style={{width: "300px"}}value={login} label="Login" onChange={this.changeInput.bind(this)}/>
+              <TextField required id="login" style={{width: "300px"}}value={login} label="Login" onChange={this.changeInput.bind(this)}/>
             </Grid>
             <Grid item xs={12}>
-              <TextField id="password" style={{width: "300px"}}value={password} label="Password" type="password" onChange={this.changeInput.bind(this)}/>
+              <TextField required id="password" style={{width: "300px"}}value={password} label="Password" type="password" onChange={this.changeInput.bind(this)}/>
             </Grid>
             <Grid item xs={12}>
               {this.getButtons()}

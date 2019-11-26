@@ -13,6 +13,16 @@ class SnackbarPoke extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+	  if (nextProps.open !== this.state.snackOpen) {
+	    this.setState({ snackOpen: nextProps.open });
+	  }
+	  
+	  if (nextProps.message !== this.state.snackMessage) {
+	    this.setState({ snackMessage: nextProps.message });
+	  }
+	}
+
   handleSnackClose(event, reason){
     if (reason === 'clickaway') {
       return;

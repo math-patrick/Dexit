@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "concurrently \"cd backend && node server.js\" \"cd client && npm start\""
+    "start": "concurrently \"cd backend && node server.js\" \"cd client && npm start\"",
+    "install": "concurrently \"cd backend && npm install\" \"cd client && npm install\""
   },
   "repository": {
     "type": "git",
